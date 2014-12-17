@@ -1,0 +1,284 @@
+<!--<div class="wrapper">
+	<div class="container" sortable>
+		<div class="inner-container" ng-repeat="container in containers">
+			<h2 class="handler">|||</h2>
+			<div class="contents" contenteditable="true">{{ container }}</div>
+		</div>
+	</div>
+	<div class="selector" sortable>
+		<div class="inner-container">
+			<h2 class="handler">|||</h2>
+			<div class="contents" contenteditable="true">heyhey1</div>
+		</div>
+		<div class="inner-container">
+			<h2 class="handler">|||</h2>
+			<div class="contents" contenteditable="true">heyhey2</div>
+		</div>
+		<div class="inner-container">
+			<h2 class="handler">|||</h2>
+			<div class="contents" contenteditable="true">heyhey3</div>
+		</div>
+		<div class="inner-container">
+			<h2 class="handler">|||</h2>
+			<div class="contents" contenteditable="true">heyhey4</div>
+		</div>
+	</div>
+</div>-->
+<!--
+<div class="template" ng-repeat="template in templates">
+	aa
+</div>
+-->
+<!--
+<style>
+#div1 {width:350px;height:70px;padding:10px;border:1px solid #aaaaaa;}
+</style>
+<script>
+function allowDrop(ev) {
+    console.log(ev);
+    ev.preventDefault();
+}
+
+function drag(ev) {
+    console.log(ev);
+    ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function drop(ev) {
+    console.log(ev);
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    ev.target.appendChild(document.getElementById(data));
+}
+</script>
+
+<div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+<br>
+<img id="drag1" src="http://www.w3schools.com/html/img_logo.gif" draggable="true" ondragstart="drag(event)" width="336" height="69">
+-->
+<div class="templates">
+	<div class="template" ng-repeat="template in templates track by $index" contents-container>{{template}}</div>
+</div>
+<!--<div id="menu" style="width:90%;margin:0 auto">
+	<div class="column" style="width:100%;display:block;" draggable="true"><header>タイトル</header></div>
+	<div class="column" style="width:100%;display:block;" draggable="true"><header>段落</header></div>
+	<div class="column" style="width:100%;display:block;" draggable="true"><header>イメージ</header></div>
+</div>-->
+
+<div class="selector">
+	<div id="columns">
+		<div class="column" draggable="true" widgets-menu>タイトル</div>
+		<div class="column" draggable="true" widgets-menu><header>段落</header></div>
+		<div class="column" draggable="true" widgets-menu><header>イメージ</header></div>
+	</div>
+</div>
+
+<script>
+var dragSrcEl = null;
+
+function handleDragStart(e) {
+  // Target (this) element is the source node.
+  this.style.opacity = '0.4';
+  this.classList.add('moving');
+
+  dragSrcEl = this;
+
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/html', this.innerHTML);
+
+}
+
+function handleDragOver(e) {
+  if (e.preventDefault) {
+    e.preventDefault(); // Necessary. Allows us to drop.
+  }
+
+  e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
+
+  return false;
+}
+
+function handleDragEnter(e) {
+  // this / e.target is the current hover target.
+  this.classList.add('over');
+}
+
+function handleDragLeave(e) {
+  this.classList.remove('over');  // this / e.target is previous target element.
+}
+
+function handleDrop(e) {
+  // this/e.target is current target element.
+
+  if (e.stopPropagation) {
+    e.stopPropagation(); // Stops some browsers from redirecting.
+  }
+
+  // Don't do anything if dropping the same column we're dragging.
+  if (dragSrcEl != this) {
+    // Set the source column's HTML to the HTML of the column we dropped on.
+    console.log("this");
+    console.log(dragSrcEl.innerHTML);
+    console.log("that");
+    console.log(e.dataTransfer.getData('text/html'));
+    dragSrcEl.innerHTML = this.innerHTML;
+    this.innerHTML = e.dataTransfer.getData('text/html');
+  }
+
+  return false;
+}
+
+function handleDragEnd(e) {
+  // this/e.target is the source node.
+
+  [].forEach.call(cols, function (col) {
+    col.classList.remove('over');
+    col.classList.remove('moving');
+  });
+
+  this.style.opacity = '1.0';
+
+}
+
+var cols = document.querySelectorAll('#columns .column');
+[].forEach.call(cols, function(col) {
+  col.addEventListener('dragstart', handleDragStart, false);
+  col.addEventListener('dragenter', handleDragEnter, false)
+  col.addEventListener('dragover', handleDragOver, false);
+  col.addEventListener('dragleave', handleDragLeave, false);
+  col.addEventListener('drop', handleDrop, false);
+  col.addEventListener('dragend', handleDragEnd, false);
+});
+
+var colz = document.querySelectorAll('#menu .column');
+[].forEach.call(colz, function(col) {
+  col.addEventListener('dragstart', handleDragStart, false);
+  col.addEventListener('dragenter', handleDragEnter, false)
+  col.addEventListener('dragover', handleDragOver, false);
+  col.addEventListener('dragleave', handleDragLeave, false);
+  col.addEventListener('drop', handleDrop, false);
+  col.addEventListener('dragend', handleDragEnd, false);
+});
+
+</script>
+
+
+
+
+<style>
+/* Prevent the text contents of draggable elements from being selectable. */
+[draggable] {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  /* Required to make elements draggable in old WebKit */
+  -khtml-user-drag: element;
+  -webkit-user-drag: element;
+}
+.column {
+  height: 150px;
+  width: 150px;
+  /*float: left;*/
+  display:inline-block;
+  border: 2px solid #666666;
+  background-color: #ccc;
+  margin-right: 5px;
+  -webkit-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 3px #000;
+  -ms-box-shadow: inset 0 0 3px #000;
+  box-shadow: inset 0 0 3px #000;
+  text-align: center;
+  cursor: move;
+
+  -webkit-transition: -webkit-transform 0.2s ease-out;
+  -moz-transition: -moz-transform 0.2s ease-out;
+  -o-transition: -o-transform 0.2s ease-out;
+  -ms-transition: -ms-transform 0.2s ease-out;
+}
+.column header {
+  color: #fff;
+  text-shadow: #000 0 1px;
+  box-shadow: 5px;
+  padding: 5px;
+  background: -moz-linear-gradient(left center, rgb(0,0,0), rgb(79,79,79), rgb(21,21,21));
+  background: -webkit-gradient(linear, left top, right top,
+                               color-stop(0, rgb(0,0,0)),
+                               color-stop(0.50, rgb(79,79,79)),
+                               color-stop(1, rgb(21,21,21)));
+  background: -webkit-linear-gradient(left center, rgb(0,0,0), rgb(79,79,79), rgb(21,21,21));
+  background: -ms-linear-gradient(left center, rgb(0,0,0), rgb(79,79,79), rgb(21,21,21));
+  border-bottom: 1px solid #ddd;
+  -webkit-border-top-left-radius: 10px;
+  -moz-border-radius-topleft: 10px;
+  -ms-border-radius-topleft: 10px;
+  border-top-left-radius: 10px;
+  -webkit-border-top-right-radius: 10px;
+  -ms-border-top-right-radius: 10px;
+  -moz-border-radius-topright: 10px;
+  border-top-right-radius: 10px;
+}
+.column.over {
+  border: 2px dashed #000;
+}
+.column.moving {
+  opacity: 0.25;
+  -webkit-transform: scale(0.8);
+  -moz-transform: scale(0.8);
+  -ms-transform: scale(0.8);
+  -o-transform: scale(0.8);
+}
+</style>
+
+
+<!--
+<style>
+[draggable] {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  /* Required to make elements draggable in old WebKit */
+  -khtml-user-drag: element;
+  -webkit-user-drag: element;
+}
+</style>
+
+<div style="width:550px;margin:0 auto;">
+	<div class="showme">+</div>
+	<div style="border:1px solid #7e7e7e;margin-bottom:5px;cursor:move;" ondragend="dragEndYo(event)" ondragover="allowDrop(event)" draggable="true">block1</div>
+	<div class="showme">+</div>
+	<div style="border:1px solid #7e7e7e;margin-bottom:5px;cursor:move;" ondragend="dragEndYo(event)" ondragover="allowDrop(event)" draggable="true">block2</div>
+	<div class="showme">+</div>
+	<div style="border:1px solid #7e7e7e;margin-bottom:5px;cursor:move;" ondragend="dragEndYo(event)" ondragover="allowDrop(event)" draggable="true">block3</div>
+	<div class="showme">+</div>
+	<div style="border:1px solid #7e7e7e;margin-bottom:5px;cursor:move;" ondragend="dragEndYo(event)" ondragover="allowDrop(event)" draggable="true">block4</div>
+	<div class="showme">+</div>
+	<div style="border:1px solid #7e7e7e;margin-bottom:5px;cursor:move;" ondragend="dragEndYo(event)" ondragover="allowDrop(event)" draggable="true">block5</div>
+</div>
+
+<script>
+function allowDrop(e) {
+	console.log(e.target);
+	$(".showme").show();
+	e.preventDefault();
+}
+function dragEndYo(e) {
+	$(".showme").hide();
+}
+$(".showme").hide();
+</script>
+-->
+<!--
+
+<ul html-sortable="sortableOptions" class="connected" ng-model='containers' html-sortable-callback="sortableCallback">
+	<li style="border:1px solid #7e7e7e" ng-repeat="container in containers track by $index">{{container}}</li>
+</ul>
+
+<ul html-sortable="sortableOptions" class="connected" ng-model='templates'>
+	<li style="border:1px solid #7e7e7e" ng-repeat="template in templates track by $index">{{template}}</li>
+</ul>
+-->
