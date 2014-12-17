@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myApp.view1', ['ngRoute', 'myApp.sortable.sortable-directive'])// 'htmlSortable'])//, 'myApp.sortable.sortable-directive'])
+angular.module('myApp.view1', ['ngRoute', 'myApp.draggable.draggable-directive', 'myApp.widgets.widgets-factory'])// 'htmlSortable'])//, 'myApp.sortable.sortable-directive'])
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/view1', {
@@ -9,7 +9,7 @@ angular.module('myApp.view1', ['ngRoute', 'myApp.sortable.sortable-directive'])/
   });
 }])
 
-.controller('View1Ctrl', ['$scope', 'contentsWidget', function($scope, contentsWidget) {
+.controller('View1Ctrl', ['$scope', function($scope) {
 
   $scope.containers = ['container1', 'container2', 'container3', 'container4'];
 
@@ -17,12 +17,14 @@ angular.module('myApp.view1', ['ngRoute', 'myApp.sortable.sortable-directive'])/
 
   $scope.yey = [];
 
-  for(var i=0; i<5; i++) {
-    var a = contentsWidget;
-    a.contents = "woohoo" + i;
-    $scope.yey.push(a);
-  }
-  console.log($scope.yey);
+  $scope.trustAsHtml = $sce.trustAsHtml;
+
+  // for(var i=0; i<5; i++) {
+  //   var a = contentsWidget;
+  //   a.contents = "woohoo" + i;
+  //   $scope.yey.push(a);
+  // }
+  // console.log($scope.yey);
 
   //$scope.gimmethatapply = function () { $scope.$apply(); };
   //$scope.$watch('templates');
