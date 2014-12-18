@@ -10,8 +10,11 @@
     function draggable($document, widgets) {
         var sourceElement = null;
         var sourceElementType = null;
+        var sourceElementIndex = 0;
+        var sourceElementTemplateName = null;
         var directive = {
             link: link,
+            //scope: { isDragging: '=dragz' },
             restrict: 'EA'
         };
         return directive;
@@ -24,6 +27,11 @@
               element.bind('dragleave', dragleave);
               element.bind('dragover',  dragover);
               element.bind('drop',      drop);
+
+              //element.bind('paste', function (e) { e.preventDefault(); document.execCommand('inserttext', false, prompt('このハコにテキストをはりつけてください。')); });
+              element.bind('keyup', function (e) { scope.templates = widgets.saveTemplates(scope.templates); });
+              element.bind('keydown', function (e) { if (e.keyCode === 13) { document.execCommand('insertHTML', false, '<br>'); return false; } } );
+
             }
             element.bind('dragstart', dragstart);
             element.bind('dragend', dragend);
@@ -47,55 +55,73 @@
             }
 
             function drop (e) {
-                var addingNewTemplate = sourceElementType === 'templateWidget' ? true : false;
-                var targetElement = this;
-
+                var isAddingTemplate = (sourceElementType === 'templateWidget') ? true : false;
+                //var targetElement = this;
+                var targetElement = element;
 
                 if (e.stopPropagation) {
                   e.stopPropagation(); //stops redirection
                 }
 
                 if (sourceElement !== targetElement) {
-                  var currentindex = $document.find('.templates div').index(targetElement)
-                  var filtered = [];
+                  var droppedAtIndex = attrs.index;
+                  var newTemplate = {}
 
-                  if( ! addingNewTemplate) {
-                    $document.find('.templates div').each(function (i, obj) {
-                        if(obj.innerHTML !== sourceElement.html()) {
-                          filtered.push(obj.innerHTML);
-                        }
-                    });
+                  if (isAddingTemplate) {
+                    scope.templates.splice((droppedAtIndex+1), 0, widgets.getTemplate(sourceElementTemplateName))
                   }
                   else {
-                    $document.find('.templates div').each(function (i, obj) {
-                      filtered.push(obj.innerHTML);
-                    });
-                    filtered.push(widgets.getTemplate()['contents'][0]);
+                    var backup_source = angular.copy( scope.templates[sourceElementIndex] );
+                    var backup_target = angular.copy( scope.templates[droppedAtIndex] );
+                    scope.templates[sourceElementIndex] = backup_target;
+                    scope.templates[droppedAtIndex] = backup_source;
                   }
 
-                  filtered.splice(currentindex, 0, sourceElement.html());
-                  $(filtered).each(function (i, obj) { scope.templates[i] = obj; }); //rebuild
-                  console.log(scope.templates);
-                  scope.$apply();
                 }
+
+                scope.$apply();
+
+
+
+                  // if( ! addingNewTemplate) {
+                  //   $document.find('.templates .template').each(function (i, obj) {
+                  //       if(obj.innerHTML !== sourceElement.html()) {
+                  //         filtered.push(obj.innerHTML);
+                  //       }
+                  //   });
+                  // }
+                  // else {
+                  //   $document.find('.templates .template').each(function (i, obj) {
+                  //     filtered.push(obj.innerHTML);
+                  //   });
+                  //   //filtered.splice(currentindex, 0, sourceElement.html());
+                  //   console.log(widgets.getTemplate(sourceElementTemplateName));
+                  //   console.log(sourceElementTemplateName);
+                  //   filtered.splice(currentindex, 0, widgets.getTemplate(sourceElementTemplateName).contents);
+                  // }
+
+                  // $(filtered).each(function (i, obj) { scope.templates[i] = {contents: obj}; }); //rebuild
+                  // console.log(scope.templates);
                 return false;
             }
 
             function dragstart (e) {
                 sourceElement = element;
                 sourceElementType = attrs.type;
-                sourceElement.css({ 'opacity': '0.4' });
+                sourceElementIndex = attrs.index;
+                sourceElementTemplateName = attrs.templateName;
+                //sourceElement.css({ 'opacity': '0.4' });
                 sourceElement.addClass('moving');
                 e.originalEvent.dataTransfer.effectAllowed = 'move';
                 e.originalEvent.dataTransfer.setData('text/html', element.html());
             }
 
             function dragend (e) {
-                $document.find('.templates div').removeClass('over');
-                $document.find('.templates div').removeClass('moving');
+                $document.find('.templates .template').removeClass('over');
+                $document.find('.templates .template').removeClass('moving');
                 sourceElement.removeClass('over');
                 sourceElement.removeClass('moving');
-                sourceElement.css({ 'opacity': '1.0' });
+                //sourceElement.css({ 'opacity': '1.0' });
             }
 
         }

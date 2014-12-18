@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myApp.view1', ['ngRoute', 'myApp.draggable.draggable-directive', 'myApp.widgets.widgets-factory'])// 'htmlSortable'])//, 'myApp.sortable.sortable-directive'])
+angular.module('myApp.view1', ['ngRoute', 'myApp.draggable.draggable-directive', 'myApp.widgets.widgets-factory', 'myApp.parser.parser-directive'])// 'htmlSortable'])//, 'myApp.sortable.sortable-directive'])
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/view1', {
@@ -9,15 +9,17 @@ angular.module('myApp.view1', ['ngRoute', 'myApp.draggable.draggable-directive',
   });
 }])
 
-.controller('View1Ctrl', ['$scope', function($scope) {
+.controller('View1Ctrl', ['$scope', 'widgets', function($scope, widgets) {
 
   $scope.containers = ['container1', 'container2', 'container3', 'container4'];
 
-  $scope.templates = ['タイトル','段落','イメージ'];
+  $scope.isDragging = { status: false };
+
+  $scope.templates = [ widgets.getTemplate('title') ];
 
   $scope.yey = [];
 
-  $scope.trustAsHtml = $sce.trustAsHtml;
+  //$scope.trustAsHtml = $sce.trustAsHtml;
 
   // for(var i=0; i<5; i++) {
   //   var a = contentsWidget;

@@ -25,32 +25,69 @@
 
 .selector {
   width:100%;
-  height:160px;
+  /*height:160px;*/
+  padding:20px 0;
+  background-color:#ddd;
+  border-top:3px solid #7e7e7e;
   bottom:0;
   position:fixed;
   text-align:center;
+}
+
+.isdragging {
+  padding:20px 0;
 }
 
 .template {
   /*display:inline-block;
   width:100px;
   height:100px;*/
-  margin:10px;
-  /*background-color:#ccc;*/
-  padding-top:0;
-  border-radius:4px;
+  /*margin:10px;
+  background-color:#ccc;*/
+  /*padding-top:0;
+  /*border-radius:4px;
   color:#7e7e7e;
   text-align:center;
-  border:1px solid #ccc;
+  border:1px solid #ccc;*/
+  /*border-bottom:1px dashed #ddd;*/
+  /*position:static;
+  top:0;
   -webkit-transition: padding-top 0.2s ease-out;
   -moz-transition: padding-top 0.2s ease-out;
   -o-transition: padding-top 0.2s ease-out;
   -ms-transition: padding-top 0.2s ease-out;
+
+  -webkit-transition: top 0.2s ease-out;
+  -moz-transition: top 0.2s ease-out;
+  -o-transition: top 0.2s ease-out;
+  -ms-transition: top 0.2s ease-out;*/
+
+
 }
 
-.templates .over {
-  padding-top:20px;
-  background-color:#ccc;
+.template.over {
+  /*padding-top:20px;
+  position:relative;
+  top:-20px;*/
+  /*background-color:#eee;
+  -webkit-animation-name: pulsate;
+  -webkit-animation-duration: 1.5s;
+  -webkit-animation-timing-function: ease-in-out;
+  -webkit-animation-iteration-count: infinite*/
+}
+
+@-webkit-keyframes pulsate {
+    0%   { background-color:#FFFFFF; /*opacity: 0.0*/ }
+    10%  { background-color:#F1F1F2; /*opacity: 0.2*/ }
+    20%  { background-color:#E6E7E8; /*opacity: 0.4*/ }
+    30%  { background-color:#DBDCDE; /*opacity: 0.6*/ }
+    40%  { background-color:#D1D2D4; /*opacity: 0.8*/ }
+    50%  { background-color:#C6C8CA; /*opacity: 1.0*/ }
+    60%  { background-color:#D1D2D4; /*opacity: 0.8*/ }
+    70%  { background-color:#DBDCDE; /*opacity: 0.6*/ }
+    80%  { background-color:#E6E7E8; /*opacity: 0.4*/ }
+    90%  { background-color:#F1F1F2; /*opacity: 0.2*/ }
+    100% { background-color:#FFFFFF; /*opacity: 0.0*/ }
 }
 
 /*.templates .out {
@@ -61,7 +98,7 @@
   -ms-transition: padding-top 0.2s ease-out;
 }*/
 
-[contenteditable="true"] { padding: 10px; /*outline: 2px dashed #CCC;*/ }
+[contenteditable="true"] { /*padding: 10px; outline: 2px dashed #CCC;*/ }
 
 [contenteditable="true"]:hover { /*outline: 2px dashed #0090D2;*/ }
 
@@ -92,4 +129,68 @@
 .menu > li:nth-child(1):before {
   content: "";
   padding: 0;
+}
+
+[draggable] {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  /* Required to make elements draggable in old WebKit */
+  -khtml-user-drag: element;
+  -webkit-user-drag: element;
+}
+.column {
+  height: 60px;
+  width: 150px;
+  /*float: left;*/
+  display:inline-block;
+  border: 2px solid #666666;
+  background-color: #ccc;
+  margin-right: 5px;
+  -webkit-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 3px #000;
+  -ms-box-shadow: inset 0 0 3px #000;
+  box-shadow: inset 0 0 3px #000;
+  text-align: center;
+  cursor: move;
+  -webkit-transition: -webkit-transform 0.2s ease-out;
+  -moz-transition: -moz-transform 0.2s ease-out;
+  -o-transition: -o-transform 0.2s ease-out;
+  -ms-transition: -ms-transform 0.2s ease-out;
+}
+.column header {
+  color: #fff;
+  text-shadow: #000 0 1px;
+  box-shadow: 5px;
+  padding: 5px;
+  background: -moz-linear-gradient(left center, rgb(0,0,0), rgb(79,79,79), rgb(21,21,21));
+  background: -webkit-gradient(linear, left top, right top,
+                               color-stop(0, rgb(0,0,0)),
+                               color-stop(0.50, rgb(79,79,79)),
+                               color-stop(1, rgb(21,21,21)));
+  background: -webkit-linear-gradient(left center, rgb(0,0,0), rgb(79,79,79), rgb(21,21,21));
+  background: -ms-linear-gradient(left center, rgb(0,0,0), rgb(79,79,79), rgb(21,21,21));
+  border-bottom: 1px solid #ddd;
+  -webkit-border-top-left-radius: 10px;
+  -moz-border-radius-topleft: 10px;
+  -ms-border-radius-topleft: 10px;
+  border-top-left-radius: 10px;
+  -webkit-border-top-right-radius: 10px;
+  -ms-border-top-right-radius: 10px;
+  -moz-border-radius-topright: 10px;
+  border-top-right-radius: 10px;
+}
+.column.over {
+  border: 2px dashed #000;
+}
+.column.moving {
+  opacity: 0.25;
+  -webkit-transform: scale(0.8);
+  -moz-transform: scale(0.8);
+  -ms-transform: scale(0.8);
+  -o-transform: scale(0.8);
 }
